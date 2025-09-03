@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>김개발 | Full Stack Developer Portfolio</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 네비게이션 -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#home" class="nav-logo">
+                <span class="logo-text">김개발</span>
+            </a>
+            <div class="nav-menu" id="nav-menu">
+                <a href="#home" class="nav-link active">홈</a>
+                <a href="#about" class="nav-link">소개</a>
+                <a href="#skills" class="nav-link">기술</a>
+                <a href="#experience" class="nav-link">경력</a>
+                <a href="#projects" class="nav-link">프로젝트</a>
+                <a href="#contact" class="nav-link">연락처</a>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 히어로 섹션 -->
+    <section id="home" class="hero">
+        <div class="hero-background">
+            <div class="hero-shapes"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-text">
+                <p class="hero-greeting">안녕하세요 👋</p>
+                <h1 class="hero-title">
+                    저는 <span class="highlight">김개발</span>입니다
+                </h1>
+                <h2 class="hero-subtitle">Full Stack Developer</h2>
+                <p class="hero-description">
+                    창의적인 웹 솔루션을 만드는 열정적인 개발자입니다.<br>
+                    사용자 경험과 코드 품질을 최우선으로 생각합니다.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#projects" class="btn btn-primary">프로젝트 보기</a>
+                    <a href="#contact" class="btn btn-outline">연락하기</a>
+                </div>
+                <div class="hero-social">
+                    <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="image-container">
+                    <div class="image-border"></div>
+                    <img src="https://via.placeholder.com/400x400/6366f1/ffffff?text=Profile" alt="프로필 이미지">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 소개 섹션 -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">About Me</h2>
+            <div class="about-content">
+                <div class="about-text" data-aos="fade-right">
+                    <h3>Full Stack Developer & Creative Problem Solver</h3>
+                    <p>
+                        5년차 풀스택 개발자로서, 웹 애플리케이션의 전체 생명주기를 이해하고 
+                        프론트엔드와 백엔드 모두에서 전문성을 발휘합니다. 
+                    </p>
+                    <p>
+                        사용자 중심의 디자인과 효율적인 코드 작성을 통해 
+                        비즈니스 가치를 창출하는 것을 목표로 합니다.
+                    </p>
+                    <div class="about-info">
+                        <div class="info-item">
+                            <span class="info-label">이름:</span>
+                            <span class="info-value">김개발</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">경력:</span>
+                            <span class="info-value">5년</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">위치:</span>
+                            <span class="info-value">서울, 대한민국</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">학력:</span>
+                            <span class="info-value">컴퓨터공학 학사</span>
+                        </div>
+                    </div>
+                    <a href="#" class="btn btn-primary download-cv">
+                        <i class="fas fa-download"></i> 이력서 다운로드
+                    </a>
+                </div>
+                <div class="about-stats" data-aos="fade-left">
+                    <div class="stat-card">
+                        <i class="fas fa-project-diagram"></i>
+                        <h3 class="stat-number" data-count="50">0</h3>
+                        <p>완료된 프로젝트</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-users"></i>
+                        <h3 class="stat-number" data-count="30">0</h3>
+                        <p>만족한 클라이언트</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-code"></i>
+                        <h3 class="stat-number" data-count="100000">0</h3>
+                        <p>작성한 코드 라인</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-award"></i>
+                        <h3 class="stat-number" data-count="15">0</h3>
+                        <p>수상 경력</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 기술 섹션 -->
+    <section id="skills" class="skills">
+        <div class="container">
+            <h2 class="section-title">Technical Skills</h2>
+            <div class="skills-container">
+                <div class="skill-category">
+                    <h3><i class="fas fa-laptop-code"></i> Frontend</h3>
+                    <div class="skill-list">
+                        <div class="skill-item">
+                            <span>HTML5</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-skill="95"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span>CSS3 / SCSS</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-skill="90"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span>JavaScript / TypeScript</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-skill="85"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span>React / Vue.js</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-skill="88"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3><i class="fas fa-server"></i> Backend</h3>
+                    <div class="skill-list">
+                        <div class="skill-item">
+                            <span>Node.js / Express</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-skill="85"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span>Python / Django</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-skill="80"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span>Java / Spring</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-skill="75"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span>RESTful API</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-skill="90"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3><i class="fas fa-database"></i> Database & Tools</h3>
+                    <div class="skill-list">
+                        <div class="skill-item">
+                            <span>MySQL / PostgreSQL</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-skill="85"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span>MongoDB</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-skill="80"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span>Git / GitHub</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-skill="92"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span>Docker / AWS</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" data-skill="78"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 경력 섹션 -->
+    <section id="experience" class="experience">
+        <div class="container">
+            <h2 class="section-title">Experience & Education</h2>
+            <div class="timeline">
+                <div class="timeline-item left">
+                    <div class="timeline-content">
+                        <span class="timeline-date">2021 - 현재</span>
+                        <h3>Senior Full Stack Developer</h3>
+                        <h4>테크 이노베이션 주식회사</h4>
+                        <p>대규모 웹 애플리케이션 개발 및 팀 리드 역할 수행. 마이크로서비스 아키텍처 설계 및 구현.</p>
+                        <div class="timeline-tags">
+                            <span class="tag">React</span>
+                            <span class="tag">Node.js</span>
+                            <span class="tag">AWS</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item right">
+                    <div class="timeline-content">
+                        <span class="timeline-date">2019 - 2021</span>
+                        <h3>Full Stack Developer</h3>
+                        <h4>디지털 솔루션즈</h4>
+                        <p>B2B 플랫폼 개발 및 유지보수. RESTful API 설계 및 프론트엔드 성능 최적화.</p>
+                        <div class="timeline-tags">
+                            <span class="tag">Vue.js</span>
+                            <span class="tag">Django</span>
+                            <span class="tag">PostgreSQL</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item left">
+                    <div class="timeline-content">
+                        <span class="timeline-date">2018 - 2019</span>
+                        <h3>Junior Developer</h3>
+                        <h4>스타트업 네트워크</h4>
+                        <p>웹 애플리케이션 개발 및 데이터베이스 관리. 애자일 방법론을 통한 협업.</p>
+                        <div class="timeline-tags">
+                            <span class="tag">JavaScript</span>
+                            <span class="tag">PHP</span>
+                            <span class="tag">MySQL</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item right">
+                    <div class="timeline-content">
+                        <span class="timeline-date">2014 - 2018</span>
+                        <h3>컴퓨터공학 학사</h3>
+                        <h4>서울대학교</h4>
+                        <p>컴퓨터공학 전공, GPA 3.8/4.0. 웹 개발 동아리 회장 및 프로그래밍 대회 수상.</p>
+                        <div class="timeline-tags">
+                            <span class="tag">Algorithm</span>
+                            <span class="tag">Data Structure</span>
+                            <span class="tag">Web Development</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 프로젝트 섹션 -->
+    <section id="projects" class="projects">
+        <div class="container">
+            <h2 class="section-title">Featured Projects</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="https://via.placeholder.com/400x300/6366f1/ffffff?text=E-Commerce" alt="E-Commerce Platform">
+                        <div class="project-overlay">
+                            <div class="project-links">
+                                <a href="#" class="project-link"><i class="fas fa-eye"></i></a>
+                                <a href="#" class="project-link"><i class="fab fa-github"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3>E-Commerce Platform</h3>
+                        <p>대규모 온라인 쇼핑몰 플랫폼 개발. 일 평균 10만 명 이상의 사용자 처리.</p>
+                        <div class="project-tech">
+                            <span>React</span>
+                            <span>Node.js</span>
+                            <span>MongoDB</span>
+                            <span>Redis</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="https://via.placeholder.com/400x300/10b981/ffffff?text=Task+Manager" alt="Task Management">
+                        <div class="project-overlay">
+                            <div class="project-links">
+                                <a href="#" class="project-link"><i class="fas fa-eye"></i></a>
+                                <a href="#" class="project-link"><i class="fab fa-github"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3>Task Management System</h3>
+                        <p>팀 협업을 위한 프로젝트 관리 도구. 실시간 업데이트와 칸반 보드 기능 구현.</p>
+                        <div class="project-tech">
+                            <span>Vue.js</span>
+                            <span>Express</span>
+                            <span>Socket.io</span>
+                            <span>PostgreSQL</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="https://via.placeholder.com/400x300/f59e0b/ffffff?text=Analytics" alt="Analytics Dashboard">
+                        <div class="project-overlay">
+                            <div class="project-links">
+                                <a href="#" class="project-link"><i class="fas fa-eye"></i></a>
+                                <a href="#" class="project-link"><i class="fab fa-github"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3>Analytics Dashboard</h3>
+                        <p>실시간 데이터 시각화 대시보드. 비즈니스 인사이트를 위한 다양한 차트와 리포트 제공.</p>
+                        <div class="project-tech">
+                            <span>React</span>
+                            <span>D3.js</span>
+                            <span>Python</span>
+                            <span>Elasticsearch</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="https://via.placeholder.com/400x300/ef4444/ffffff?text=Social+App" alt="Social Network">
+                        <div class="project-overlay">
+                            <div class="project-links">
+                                <a href="#" class="project-link"><i class="fas fa-eye"></i></a>
+                                <a href="#" class="project-link"><i class="fab fa-github"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3>Social Network App</h3>
+                        <p>소셜 미디어 애플리케이션. 실시간 채팅, 피드, 알림 기능 구현.</p>
+                        <div class="project-tech">
+                            <span>React Native</span>
+                            <span>GraphQL</span>
+                            <span>Node.js</span>
+                            <span>Redis</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="https://via.placeholder.com/400x300/8b5cf6/ffffff?text=AI+Chatbot" alt="AI Chatbot">
+                        <div class="project-overlay">
+                            <div class="project-links">
+                                <a href="#" class="project-link"><i class="fas fa-eye"></i></a>
+                                <a href="#" class="project-link"><i class="fab fa-github"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3>AI Customer Service Bot</h3>
+                        <p>인공지능 기반 고객 서비스 챗봇. 자연어 처리와 머신러닝 활용.</p>
+                        <div class="project-tech">
+                            <span>Python</span>
+                            <span>TensorFlow</span>
+                            <span>Flask</span>
+                            <span>Docker</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="https://via.placeholder.com/400x300/06b6d4/ffffff?text=CMS" alt="CMS Platform">
+                        <div class="project-overlay">
+                            <div class="project-links">
+                                <a href="#" class="project-link"><i class="fas fa-eye"></i></a>
+                                <a href="#" class="project-link"><i class="fab fa-github"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3>Content Management System</h3>
+                        <p>헤드리스 CMS 플랫폼. 다중 테넌트 아키텍처와 RESTful API 제공.</p>
+                        <div class="project-tech">
+                            <span>Next.js</span>
+                            <span>Strapi</span>
+                            <span>PostgreSQL</span>
+                            <span>AWS</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 연락처 섹션 -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h3>연락처 정보</h3>
+                    <p>프로젝트 문의나 협업 제안을 환영합니다. 아래 연락처로 편하게 연락주세요.</p>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <h4>Email</h4>
+                            <p>kim.developer@example.com</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <h4>Phone</h4>
+                            <p>+82 10-1234-5678</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h4>Location</h4>
+                            <p>서울특별시 강남구</p>
+                        </div>
+                    </div>
+                    <div class="contact-social">
+                        <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <form class="contact-form">
+                    <div class="form-group">
+                        <input type="text" placeholder="이름" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" placeholder="이메일" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" placeholder="제목" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea placeholder="메시지를 입력해주세요..." rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-submit">
+                        <i class="fas fa-paper-plane"></i> 메시지 전송
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- 푸터 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2024 김개발. All rights reserved.</p>
+                <p>Made with <span class="heart">❤️</span> and lots of ☕</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 스크롤 투 탑 버튼 -->
+    <button class="scroll-to-top" id="scrollToTop">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
