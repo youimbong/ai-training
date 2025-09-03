@@ -280,6 +280,8 @@ body {
     height: 100%;
     object-fit: cover;
     border-radius: 20px;
+    filter: brightness(1.1) contrast(1.05);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 /* ===== CSS 아바타 생성 ===== */
@@ -645,6 +647,7 @@ section {
     height: 100%;
     object-fit: cover;
     transition: transform 0.3s ease;
+    filter: brightness(0.95);
 }
 
 .project-card:hover .project-image img {
