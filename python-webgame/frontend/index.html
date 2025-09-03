@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mirror Maze - 빛의 미로</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/game.css">
+</head>
+<body>
+    <div id="app">
+        <!-- 헤더 -->
+        <header class="game-header">
+            <div class="logo">
+                <span class="logo-icon">💎</span>
+                <h1>Mirror Maze</h1>
+            </div>
+            <div class="game-stats">
+                <div class="stat">
+                    <span class="stat-label">레벨</span>
+                    <span class="stat-value" id="current-level">1</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">이동 수</span>
+                    <span class="stat-value" id="move-count">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">별점</span>
+                    <span class="stat-value" id="stars">
+                        <span class="star">⭐</span>
+                        <span class="star">⭐</span>
+                        <span class="star">⭐</span>
+                    </span>
+                </div>
+            </div>
+        </header>
+
+        <!-- 메인 게임 영역 -->
+        <main class="game-container">
+            <!-- 레벨 선택 화면 -->
+            <div id="level-select" class="screen active">
+                <h2>레벨 선택</h2>
+                <div class="level-grid" id="level-grid">
+                    <!-- 레벨 버튼들이 동적으로 생성됩니다 -->
+                </div>
+            </div>
+
+            <!-- 게임 플레이 화면 -->
+            <div id="game-screen" class="screen">
+                <div class="game-area">
+                    <!-- 도구 패널 -->
+                    <div class="tool-panel">
+                        <h3>도구</h3>
+                        <div class="tools" id="tools">
+                            <div class="tool" data-tool="mirror_left" title="왼쪽 거울 (\)">
+                                <svg viewBox="0 0 50 50" class="tool-icon">
+                                    <line x1="10" y1="10" x2="40" y2="40" stroke="#fff" stroke-width="3"/>
+                                    <rect x="5" y="5" width="40" height="40" fill="none" stroke="#fff" stroke-width="1"/>
+                                </svg>
+                                <span class="tool-count">0</span>
+                            </div>
+                            <div class="tool" data-tool="mirror_right" title="오른쪽 거울 (/)">
+                                <svg viewBox="0 0 50 50" class="tool-icon">
+                                    <line x1="40" y1="10" x2="10" y2="40" stroke="#fff" stroke-width="3"/>
+                                    <rect x="5" y="5" width="40" height="40" fill="none" stroke="#fff" stroke-width="1"/>
+                                </svg>
+                                <span class="tool-count">0</span>
+                            </div>
+                            <div class="tool" data-tool="splitter" title="빔 분할기">
+                                <svg viewBox="0 0 50 50" class="tool-icon">
+                                    <line x1="25" y1="10" x2="25" y2="40" stroke="#fff" stroke-width="3"/>
+                                    <line x1="10" y1="25" x2="40" y2="25" stroke="#fff" stroke-width="3"/>
+                                </svg>
+                                <span class="tool-count">0</span>
+                            </div>
+                            <div class="tool" data-tool="prism" title="프리즘">
+                                <svg viewBox="0 0 50 50" class="tool-icon">
+                                    <polygon points="25,10 40,40 10,40" fill="none" stroke="#fff" stroke-width="2"/>
+                                </svg>
+                                <span class="tool-count">0</span>
+                            </div>
+                            <div class="tool" data-tool="filter_red" title="빨간색 필터">
+                                <svg viewBox="0 0 50 50" class="tool-icon">
+                                    <circle cx="25" cy="25" r="15" fill="rgba(255,0,0,0.5)" stroke="#f00" stroke-width="2"/>
+                                </svg>
+                                <span class="tool-count">0</span>
+                            </div>
+                            <div class="tool" data-tool="filter_blue" title="파란색 필터">
+                                <svg viewBox="0 0 50 50" class="tool-icon">
+                                    <circle cx="25" cy="25" r="15" fill="rgba(0,0,255,0.5)" stroke="#00f" stroke-width="2"/>
+                                </svg>
+                                <span class="tool-count">0</span>
+                            </div>
+                            <div class="tool" data-tool="filter_green" title="초록색 필터">
+                                <svg viewBox="0 0 50 50" class="tool-icon">
+                                    <circle cx="25" cy="25" r="15" fill="rgba(0,255,0,0.5)" stroke="#0f0" stroke-width="2"/>
+                                </svg>
+                                <span class="tool-count">0</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 액션 버튼 -->
+                        <div class="actions">
+                            <button class="action-btn" id="rotate-btn" title="회전 (R)">
+                                <span>🔄</span> 회전
+                            </button>
+                            <button class="action-btn" id="remove-btn" title="제거 (Delete)">
+                                <span>🗑️</span> 제거
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 게임 보드 -->
+                    <div class="game-board-container">
+                        <canvas id="game-canvas" width="500" height="500"></canvas>
+                        <div class="light-effects" id="light-effects"></div>
+                    </div>
+
+                    <!-- 정보 패널 -->
+                    <div class="info-panel">
+                        <h3 id="level-name">레벨 이름</h3>
+                        <p id="level-description">레벨 설명</p>
+                        
+                        <div class="level-info">
+                            <div class="info-item">
+                                <span>난이도:</span>
+                                <span id="difficulty">Easy</span>
+                            </div>
+                            <div class="info-item">
+                                <span>최소 이동:</span>
+                                <span id="min-moves">0</span>
+                            </div>
+                        </div>
+                        
+                        <div class="control-buttons">
+                            <button class="btn btn-primary" id="check-solution">
+                                <span>✨</span> 확인
+                            </button>
+                            <button class="btn btn-secondary" id="reset-level">
+                                <span>🔄</span> 초기화
+                            </button>
+                            <button class="btn btn-hint" id="hint-btn">
+                                <span>💡</span> 힌트
+                            </button>
+                            <button class="btn btn-back" id="back-to-menu">
+                                <span>◀</span> 메뉴로
+                            </button>
+                        </div>
+                        
+                        <div class="hint-display" id="hint-display"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 승리 화면 -->
+            <div id="victory-screen" class="modal">
+                <div class="modal-content">
+                    <h2>🎉 레벨 완료!</h2>
+                    <div class="victory-stats">
+                        <div class="victory-stars" id="victory-stars">
+                            <span class="star large">⭐</span>
+                            <span class="star large">⭐</span>
+                            <span class="star large">⭐</span>
+                        </div>
+                        <p>이동 수: <span id="final-moves">0</span></p>
+                        <p>최소 이동: <span id="final-min-moves">0</span></p>
+                    </div>
+                    <div class="victory-buttons">
+                        <button class="btn btn-primary" id="next-level">다음 레벨</button>
+                        <button class="btn btn-secondary" id="replay-level">다시 하기</button>
+                        <button class="btn btn-secondary" id="menu-from-victory">메뉴로</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 사운드 토글 -->
+        <button class="sound-toggle" id="sound-toggle" title="사운드 켜기/끄기">
+            <span id="sound-icon">🔊</span>
+        </button>
+    </div>
+
+    <script src="/js/game.js"></script>
+    <script src="/js/renderer.js"></script>
+    <script src="/js/ui.js"></script>
+    <script src="/js/main.js"></script>
+</body>
+</html>
