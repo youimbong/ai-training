@@ -1,0 +1,113 @@
+{
+  "app": {
+    "title": "AI Assistant",
+    "page_title": "🤖 AI Assistant",
+    "page_icon": "🤖",
+    "layout": "centered",
+    "show_header": false,
+    "show_footer": false
+  },
+  
+  "chat": {
+    "welcome_message": "안녕하세요! 무엇을 도와드릴까요? 😊",
+    "placeholder": "메시지를 입력하세요...",
+    "thinking_indicator": "💭 생각 중...",
+    "error_message": "죄송합니다. 오류가 발생했습니다. 다시 시도해주세요.",
+    "max_messages_display": 50,
+    "auto_scroll": true,
+    "show_timestamp": false,
+    "show_copy_button": true,
+    "enable_markdown": true,
+    "enable_latex": true,
+    "enable_code_highlighting": true
+  },
+  
+  "ai": {
+    "provider": "openai",
+    "model": "gpt-3.5-turbo",
+    "temperature": 0.7,
+    "max_tokens": 2000,
+    "stream": true,
+    "system_prompt": "You are a helpful, friendly, and knowledgeable AI assistant. Respond in the same language as the user's input.",
+    "conversation_memory": 20,
+    "timeout": 30
+  },
+  
+  "models": {
+    "openai": {
+      "available": ["gpt-3.5-turbo", "gpt-4", "gpt-4-turbo"],
+      "default": "gpt-3.5-turbo"
+    },
+    "anthropic": {
+      "available": ["claude-3-haiku-20240307", "claude-3-sonnet-20240229", "claude-3-opus-20240229"],
+      "default": "claude-3-sonnet-20240229"
+    }
+  },
+  
+  "ui": {
+    "theme": {
+      "base": "dark",
+      "primary_color": "#FF6B6B",
+      "background_gradient": ["#0E1117", "#1E1E1E"],
+      "chat_bubble_user": "#262730",
+      "chat_bubble_assistant": "#1A1A1F",
+      "text_color": "#FAFAFA",
+      "font_family": "Sans Serif"
+    },
+    "animations": {
+      "enabled": true,
+      "typing_speed": 30,
+      "fade_in": true
+    },
+    "layout": {
+      "max_width": "800px",
+      "message_spacing": "1rem",
+      "padding": "2rem",
+      "border_radius": "10px"
+    }
+  },
+  
+  "features": {
+    "clear_chat_button": true,
+    "export_chat": false,
+    "voice_input": false,
+    "file_upload": false,
+    "web_search": false,
+    "conversation_branching": false,
+    "suggested_prompts": true,
+    "typing_indicator": true,
+    "read_receipts": false,
+    "emoji_reactions": false
+  },
+  
+  "suggested_prompts": [
+    "코드 작성을 도와주세요",
+    "이메일 초안을 작성해주세요",
+    "아이디어 브레인스토밍",
+    "문서 요약해주세요",
+    "학습 계획 만들기"
+  ],
+  
+  "security": {
+    "rate_limit": {
+      "enabled": false,
+      "requests_per_minute": 10,
+      "requests_per_hour": 100
+    },
+    "content_filter": {
+      "enabled": false,
+      "block_sensitive": false
+    },
+    "data_retention": {
+      "enabled": false,
+      "days": 0
+    }
+  },
+  
+  "performance": {
+    "cache_responses": false,
+    "lazy_loading": true,
+    "batch_messages": false,
+    "compression": false
+  }
+}
