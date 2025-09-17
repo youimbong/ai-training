@@ -46,11 +46,14 @@ def test_settings():
         print(f"✅ 기본 카테고리: {settings.DEFAULT_CATEGORY}")
         print(f"✅ 최대 결과 수: {settings.DEFAULT_MAX_RESULTS}")
         
-        # API 키 확인
-        if settings.YOUTUBE_API_KEY:
-            print("✅ YouTube API 키가 설정되어 있습니다")
-        else:
-            print("⚠️ YouTube API 키가 설정되지 않았습니다")
+        # 설정 상태 확인
+        status = settings.get_config_status()
+        print(f"✅ 설정 소스: {status['config_source']}")
+        print(f"✅ 로드 성공: {'✅' if status['load_success'] else '❌'}")
+        print(f"✅ API 키 설정: {'✅' if status['api_key_set'] else '❌'}")
+        
+        if status['load_errors']:
+            print(f"⚠️ 로드 오류: {', '.join(status['load_errors'])}")
         
         return True
         
