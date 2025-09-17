@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  youtube-dashboard:
+    build: .
+    container_name: youtube-trending-dashboard
+    ports:
+      - "8501:8501"
+    environment:
+      - YOUTUBE_API_KEY=${YOUTUBE_API_KEY}
+      - APP_TITLE=${APP_TITLE:-YouTube 인기 동영상 대시보드}
+      - DEFAULT_REGION=${DEFAULT_REGION:-KR}
+      - DEFAULT_CATEGORY=${DEFAULT_CATEGORY:-0}
+      - DEFAULT_MAX_RESULTS=${DEFAULT_MAX_RESULTS:-30}
+      - CACHE_TTL=${CACHE_TTL:-300}
+      - ENABLE_CACHE=${ENABLE_CACHE:-true}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - DEFAULT_THEME=${DEFAULT_THEME:-light}
+      - ENABLE_DARK_MODE=${ENABLE_DARK_MODE:-true}
+      - ITEMS_PER_PAGE=${ITEMS_PER_PAGE:-30}
+      - MAX_RETRIES=${MAX_RETRIES:-3}
+      - REQUEST_TIMEOUT=${REQUEST_TIMEOUT:-30}
+      - ENABLE_LAZY_LOADING=${ENABLE_LAZY_LOADING:-true}
+      - ENABLE_RATE_LIMITING=${ENABLE_RATE_LIMITING:-true}
+      - MAX_REQUESTS_PER_MINUTE=${MAX_REQUESTS_PER_MINUTE:-100}
+    volumes:
+      - ./logs:/app/logs
+      - ./.env:/app/.env:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - youtube-dashboard-network
+
+networks:
+  youtube-dashboard-network:
+    driver: bridge
+
+volumes:
+  logs:
+    driver: local
