@@ -139,86 +139,99 @@ class AuthManager:
     @staticmethod
     def render_login_page():
         """로그인 페이지 렌더링"""
+        # 화면 정중앙에 작고 단순한 로그인 폼 배치
         st.markdown(
             """
-            <div style="display: flex; justify-content: center; align-items: center; min-height: 60vh;">
-                <div style="max-width: 400px; width: 100%; padding: 2rem;">
+            <style>
+            /* Streamlit 기본 패딩 제거 */
+            .block-container {
+                padding-top: 3rem !important;
+            }
+            </style>
             """,
             unsafe_allow_html=True
         )
 
-        # 로고 및 타이틀
-        st.markdown(
-            """
-            <div style="text-align: center; margin-bottom: 2rem;">
-                <div style="font-size: 4rem; margin-bottom: 1rem;">🔐</div>
-                <h1 style="margin: 0; font-size: 2rem;">YouTube 트렌딩 대시보드</h1>
-                <p style="color: var(--text-secondary); margin-top: 0.5rem;">
-                    계속하려면 비밀번호를 입력하세요
-                </p>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+        # 상단 여백
+        st.markdown("<br><br><br>", unsafe_allow_html=True)
 
-        # 잠금 상태 확인
-        is_locked, remaining = AuthManager.is_locked()
+        # 중앙 정렬 컨테이너
+        col1, col2, col3 = st.columns([1, 1, 1])
 
-        if is_locked:
-            minutes = remaining // 60
-            seconds = remaining % 60
-            st.error(f"⏳ 너무 많은 시도로 인해 잠겼습니다. {minutes}분 {seconds}초 후에 다시 시도하세요.")
-            # 자동 새로고침
-            time.sleep(1)
-            st.rerun()
-        else:
-            # 비밀번호 입력 폼
-            with st.form("login_form", clear_on_submit=True):
-                password = st.text_input(
-                    "비밀번호",
-                    type="password",
-                    placeholder="비밀번호를 입력하세요",
-                    help="관리자가 설정한 비밀번호를 입력하세요"
-                )
+        with col2:
+            # 로그인 카드
+            st.markdown(
+                """
+                <div style="
+                    text-align: center;
+                    padding: 2rem;
+                    background: white;
+                    border: 1px solid #e0e0e0;
+                    border-radius: 8px;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                ">
+                    <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🔐</div>
+                    <h3 style="margin: 0 0 0.5rem 0; color: #333;">YouTube 트렌딩</h3>
+                    <p style="color: #666; font-size: 0.9rem; margin-bottom: 1.5rem;">비밀번호를 입력하세요</p>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
 
-                col1, col2, col3 = st.columns([1, 2, 1])
-                with col2:
+            # 잠금 상태 확인
+            is_locked, remaining = AuthManager.is_locked()
+
+            if is_locked:
+                minutes = remaining // 60
+                seconds = remaining % 60
+                st.error(f"⏳ 잠금 상태: {minutes}분 {seconds}초 후 재시도")
+                time.sleep(1)
+                st.rerun()
+            else:
+                # 비밀번호 입력 폼
+                with st.form("login_form", clear_on_submit=True):
+                    password = st.text_input(
+                        "비밀번호",
+                        type="password",
+                        placeholder="비밀번호 입력",
+                        label_visibility="collapsed"
+                    )
+
                     submit = st.form_submit_button(
-                        "🔓 로그인",
+                        "로그인",
                         use_container_width=True,
                         type="primary"
                     )
 
-                if submit:
-                    if password:
-                        if AuthManager.verify_password(password):
-                            st.success("✅ 로그인 성공!")
-                            time.sleep(1)
-                            st.rerun()
-                        else:
-                            attempts_left = 5 - st.session_state.login_attempts
-                            if attempts_left > 0:
-                                st.error(f"❌ 비밀번호가 올바르지 않습니다. (남은 시도: {attempts_left}회)")
+                    if submit:
+                        if password:
+                            if AuthManager.verify_password(password):
+                                st.success("✅ 로그인 성공")
+                                time.sleep(0.5)
+                                st.rerun()
                             else:
-                                st.error("🔒 계정이 잠겼습니다. 5분 후에 다시 시도하세요.")
-                    else:
-                        st.warning("⚠️ 비밀번호를 입력하세요.")
+                                attempts_left = 5 - st.session_state.login_attempts
+                                if attempts_left > 0:
+                                    st.error(f"올바르지 않은 비밀번호 (남은 시도: {attempts_left})")
+                                else:
+                                    st.error("계정이 잠겼습니다")
+                        else:
+                            st.warning("비밀번호를 입력하세요")
 
-        # 도움말
-        with st.expander("🤔 비밀번호를 잊으셨나요?"):
-            st.info(
+            # 도움말 링크
+            st.markdown(
                 """
-                **비밀번호 재설정 방법:**
-                1. `.streamlit/secrets.toml` 파일을 엽니다
-                2. `app_password = "새로운비밀번호"` 를 설정합니다
-                3. 애플리케이션을 재시작합니다
-
-                **비밀번호 비활성화:**
-                - `enable_password_auth = false` 로 설정하면 비밀번호 인증을 비활성화할 수 있습니다
-                """
+                <div style="text-align: center; margin-top: 1rem;">
+                    <small style="color: #999;">비밀번호를 잊으셨나요?</small>
+                </div>
+                """,
+                unsafe_allow_html=True
             )
 
-        st.markdown("</div></div>", unsafe_allow_html=True)
+            with st.expander("도움말", expanded=False):
+                st.caption(
+                    "**재설정 방법**: `.streamlit/secrets.toml`에서 `app_password` 변경"
+                )
 
     @staticmethod
     def render_logout_button():
