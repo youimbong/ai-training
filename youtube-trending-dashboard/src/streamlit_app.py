@@ -285,17 +285,71 @@ def load_trending_videos(
         logger.error(f"동영상 데이터 로딩 중 오류: {e}")
         raise
 
+# 설정 상태 표시
+def render_config_status():
+    """설정 로드 상태 표시"""
+    status = settings.get_config_status()
+    
+    with st.expander("🔧 설정 로드 상태", expanded=False):
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.metric("설정 소스", status['config_source'])
+            st.metric("로드 성공", "✅" if status['load_success'] else "❌")
+        
+        with col2:
+            st.metric("API 키 설정", "✅" if status['api_key_set'] else "❌")
+            st.metric("Secrets 사용 가능", "✅" if status['secrets_available'] else "❌")
+        
+        if status['load_errors']:
+            st.error(f"로드 오류: {', '.join(status['load_errors'])}")
+        
+        # 상세 설정 정보
+        if st.checkbox("상세 설정 정보 보기"):
+            config_info = settings.get_config_info()
+            for key, value in config_info.items():
+                st.text(f"{key}: {value}")
+        
+        # API 키 디버깅 정보
+        st.subheader("🔑 API 키 디버깅")
+        api_key_display = settings.get_api_key_display(show_full=False)
+        st.text(f"API 키 (부분 표시): {api_key_display}")
+        
+        # API 키가 플레이스홀더인지 확인
+        if "your_youtube_api_key_here" in settings.YOUTUBE_API_KEY:
+            st.error("❌ API 키가 설정되지 않았습니다!")
+            st.info("""
+            **YouTube API 키 설정 방법:**
+            
+            1. [Google Cloud Console](https://console.cloud.google.com/) 접속
+            2. 새 프로젝트 생성 또는 기존 프로젝트 선택
+            3. YouTube Data API v3 활성화
+            4. API 키 생성
+            5. `.streamlit/secrets.toml` 파일에서 `youtube_api_key` 값을 실제 키로 변경
+            """)
+        
+        if st.checkbox("전체 API 키 보기 (디버깅용)"):
+            full_api_key = settings.get_api_key_display(show_full=True)
+            st.text(f"전체 API 키: {full_api_key}")
+            st.warning("⚠️ 보안상 주의: 이 정보를 공유하지 마세요!")
+
 # 메인 애플리케이션
 def main():
     """메인 애플리케이션 함수"""
     # CSS 로드
     load_css()
     
+    # 설정 상태 출력 (콘솔)
+    settings.print_config_status()
+    
     # 세션 상태 초기화
     init_session_state()
     
     # 헤더 렌더링
     render_header()
+    
+    # 설정 상태 표시
+    render_config_status()
     
     # 사이드바 렌더링
     if not render_sidebar():
