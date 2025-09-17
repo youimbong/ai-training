@@ -5,10 +5,14 @@ Streamlit Cloud와 로컬 환경을 모두 지원합니다.
 import os
 import streamlit as st
 from typing import Optional, Any, Dict
-from dotenv import load_dotenv
 
-# 환경 변수 로드 (로컬 개발용)
-load_dotenv()
+# dotenv import 시도 (선택적)
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("✅ dotenv 로드 성공")
+except ImportError:
+    print("⚠️ dotenv 없음, 환경 변수만 사용")
 
 
 class Settings:
