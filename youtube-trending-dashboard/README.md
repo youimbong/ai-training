@@ -161,12 +161,36 @@ open htmlcov/index.html
 
 ## 🚀 배포
 
-### Streamlit Community Cloud
-1. GitHub 저장소에 코드 푸시
-2. [Streamlit Community Cloud](https://share.streamlit.io/) 접속
-3. 새 앱 생성 및 GitHub 저장소 연결
-4. 환경 변수 설정 (YOUTUBE_API_KEY 등)
-5. 배포 완료
+### Streamlit Community Cloud (권장)
+
+1. **GitHub 저장소 준비**
+   ```bash
+   git add .
+   git commit -m "Add Streamlit Cloud support"
+   git push origin main
+   ```
+
+2. **Streamlit Cloud에서 배포**
+   - [share.streamlit.io](https://share.streamlit.io) 접속
+   - "New app" 클릭
+   - GitHub 저장소 연결
+   - 메인 파일 경로: `src/streamlit_app.py`
+   - 브랜치: `main`
+
+3. **Secrets 설정**
+   Streamlit Cloud 대시보드에서 "Secrets" 탭으로 이동하여 다음 설정 추가:
+   ```toml
+   youtube_api_key = "your_youtube_api_key_here"
+   app_title = "YouTube 인기 동영상 대시보드"
+   default_region = "KR"
+   default_category = 0
+   max_results = 30
+   ```
+
+4. **배포 완료**
+   - 자동으로 배포가 시작됩니다
+   - 배포 상태는 대시보드에서 확인 가능합니다
+   - 배포 완료 후 제공되는 URL로 접속 가능합니다
 
 ### AWS/GCP/Azure
 ```bash
