@@ -73,8 +73,35 @@ def render_header():
     st.markdown(
         f"""
         <div class="header-container">
-            <h1 class="header-title">{settings.APP_TITLE}</h1>
-            <p class="header-subtitle">실시간 YouTube 인기 동영상을 확인하세요</p>
+            <div class="header-content">
+                <div class="header-logo">
+                    <span class="logo-icon">🎬</span>
+                </div>
+                <div class="header-text">
+                    <h1 class="header-title">
+                        <span class="title-icon">📺</span>
+                        {settings.APP_TITLE}
+                    </h1>
+                    <p class="header-subtitle">
+                        <span class="subtitle-icon">✨</span>
+                        실시간으로 업데이트되는 YouTube 트렌딩 동영상을 만나보세요
+                    </p>
+                </div>
+            </div>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <span class="stat-icon">🌐</span>
+                    <span class="stat-label">글로벌 트렌드</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">⚡</span>
+                    <span class="stat-label">실시간 업데이트</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">🎯</span>
+                    <span class="stat-label">맞춤 필터링</span>
+                </div>
+            </div>
         </div>
         """,
         unsafe_allow_html=True
@@ -84,86 +111,105 @@ def render_header():
 def render_sidebar():
     """사이드바 렌더링"""
     with st.sidebar:
-        st.title("⚙️ 설정")
-        
+        # 사이드바 헤더
+        st.markdown(
+            """
+            <div style="text-align: center; padding: 20px 0;">
+                <h2 style="margin: 0; font-size: 24px;">
+                    <span style="font-size: 32px;">🎯</span><br>
+                    트렌드 필터
+                </h2>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
         # API 키 확인
         if not settings.validate_config():
             st.error("⚠️ YouTube API 키가 설정되지 않았습니다.")
             st.info("환경 변수 YOUTUBE_API_KEY를 설정해주세요.")
-            
-            # 설정 정보 표시 (디버깅용)
-            with st.expander("🔧 현재 설정 정보", expanded=False):
-                config_info = settings.get_config_info()
-                for key, value in config_info.items():
-                    st.text(f"{key}: {value}")
-            
             return False
-        
-        # 기본 설정만 유지
-        st.subheader("⚙️ 설정")
-        
-        # 기본 설정값들
+
+        # 지역 선택 섹션
+        st.markdown("### 🌍 지역 선택")
         region = st.selectbox(
-            "지역",
+            "어느 지역의 트렌드를 보시겠어요?",
             list(settings.SUPPORTED_REGIONS.keys()),
             index=list(settings.SUPPORTED_REGIONS.keys()).index(st.session_state.get('current_region', settings.DEFAULT_REGION)),
-            help="인기 동영상을 조회할 지역을 선택하세요."
+            format_func=lambda x: f"{settings.SUPPORTED_REGIONS[x]}",
+            help="선택한 지역의 인기 동영상을 보여드립니다"
         )
-        
+
+        # 카테고리 선택 섹션
+        st.markdown("### 🎬 카테고리")
         category = st.selectbox(
-            "카테고리",
+            "관심있는 주제를 선택하세요",
             list(settings.YOUTUBE_CATEGORIES.keys()),
             index=list(settings.YOUTUBE_CATEGORIES.keys()).index(st.session_state.get('current_category', settings.DEFAULT_CATEGORY)),
-            help="동영상 카테고리를 선택하세요."
+            format_func=lambda x: f"{settings.YOUTUBE_CATEGORIES[x]}",
+            help="특정 카테고리의 동영상만 필터링합니다"
         )
-        
-        results_per_page = st.selectbox(
-            "페이지당 결과 수",
-            [10, 20, 30, 50],
-            index=[10, 20, 30, 50].index(st.session_state.get('current_results_per_page', settings.DEFAULT_MAX_RESULTS)),
-            help="한 페이지에 표시할 동영상 수를 선택하세요."
+
+        # 디스플레이 옵션
+        st.markdown("### ✨ 표시 설정")
+
+        col1, col2 = st.columns(2)
+        with col1:
+            view_mode = st.radio(
+                "📱 레이아웃",
+                ["grid", "list"],
+                format_func=lambda x: "카드형" if x == "grid" else "목록형",
+                index=0 if st.session_state.get('view_mode', 'grid') == 'grid' else 1
+            )
+
+        with col2:
+            results_per_page = st.select_slider(
+                "📊 표시 개수",
+                options=[10, 20, 30, 50],
+                value=st.session_state.get('current_results_per_page', settings.DEFAULT_MAX_RESULTS)
+            )
+
+        # 고급 옵션
+        st.markdown("### ⚙️ 고급 설정")
+
+        # 정렬 옵션
+        sort_by = st.selectbox(
+            "🔀 정렬 기준",
+            ["view_count", "published_at", "like_count"],
+            format_func=lambda x: {"view_count": "조회수 순", "published_at": "최신 순", "like_count": "좋아요 순"}.get(x, x),
+            index=0
         )
-        
-        filters = {
-            'region': region,
-            'category': category,
-            'sort': 'view_count',
-            'results_per_page': results_per_page,
-            'search_query': ''
-        }
-        
-        advanced_filters = {}
-        
-        # 뷰 모드 선택
-        st.subheader("👁️ 표시 옵션")
-        view_mode = st.radio(
-            "뷰 모드",
-            ["grid", "list"],
-            format_func=lambda x: "그리드" if x == "grid" else "리스트",
-            index=0 if st.session_state.get('view_mode', 'grid') == 'grid' else 1
-        )
-        
+
         # 자동 새로고침
         auto_refresh = st.checkbox(
-            "자동 새로고침 (5분마다)",
-            value=st.session_state.get('auto_refresh', False)
+            "🔄 자동 새로고침 (5분마다)",
+            value=st.session_state.get('auto_refresh', False),
+            help="5분마다 자동으로 최신 동영상을 불러옵니다"
         )
         
+        # 액션 버튼
+        st.markdown("### 🚀 실행")
+
         # 새로고침 버튼
-        if st.button("🔄 새로고침", type="primary", use_container_width=True):
+        if st.button("✨ 트렌드 업데이트", type="primary", use_container_width=True):
             st.session_state.loading = True
             st.session_state.videos = []  # 기존 데이터 초기화
             st.rerun()
-        
+
+        # 마지막 업데이트 시간 표시
+        if st.session_state.get('last_refresh'):
+            import time
+            time_str = time.strftime('%H:%M:%S', time.localtime(st.session_state.last_refresh))
+            st.caption(f"⏰ 마지막 업데이트: {time_str}")
+
         # 설정 저장
         st.session_state.update({
             'current_region': region,
             'current_category': category,
-            'current_sort': 'view_count',
+            'current_sort': sort_by,
             'current_results_per_page': results_per_page,
             'view_mode': view_mode,
-            'auto_refresh': auto_refresh,
-            'advanced_filters': advanced_filters
+            'auto_refresh': auto_refresh
         })
         
         return True
@@ -173,7 +219,7 @@ def render_stats():
     """통계 카드 렌더링"""
     if not st.session_state.videos:
         return
-    
+
     total_videos = len(st.session_state.videos)
     total_views = sum(video.get('raw_view_count', 0) for video in st.session_state.videos)
     total_likes = sum(video.get('raw_like_count', 0) for video in st.session_state.videos)
@@ -181,25 +227,114 @@ def render_stats():
         Filters._parse_duration_to_seconds(video.get('raw_duration', 'PT0S'))
         for video in st.session_state.videos
     ) / total_videos if total_videos > 0 else 0
-    
+
     # 평균 동영상 길이를 분:초 형식으로 변환
     avg_minutes = int(avg_duration // 60)
     avg_seconds = int(avg_duration % 60)
     avg_duration_str = f"{avg_minutes}:{avg_seconds:02d}"
-    
+
+    # 애니메이션과 함께 통계 카드 표시
+    st.markdown('<div class="stats-container fade-in">', unsafe_allow_html=True)
+
     col1, col2, col3, col4 = st.columns(4)
-    
+
     with col1:
-        st.metric("총 동영상", f"{total_videos:,}개")
-    
+        st.markdown(
+            f"""
+            <div class="stat-card scale-in">
+                <div class="stat-card-icon">📹</div>
+                <div class="stat-card-value">{total_videos:,}개</div>
+                <div class="stat-card-label">총 동영상</div>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
     with col2:
-        st.metric("총 조회수", f"{total_views:,}회")
-    
+        st.markdown(
+            f"""
+            <div class="stat-card scale-in" style="animation-delay: 0.1s;">
+                <div class="stat-card-icon">👁️</div>
+                <div class="stat-card-value">{total_views:,}회</div>
+                <div class="stat-card-label">총 조회수</div>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
     with col3:
-        st.metric("총 좋아요", f"{total_likes:,}개")
-    
+        st.markdown(
+            f"""
+            <div class="stat-card scale-in" style="animation-delay: 0.2s;">
+                <div class="stat-card-icon">👍</div>
+                <div class="stat-card-value">{total_likes:,}개</div>
+                <div class="stat-card-label">총 좋아요</div>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
     with col4:
-        st.metric("평균 길이", avg_duration_str)
+        st.markdown(
+            f"""
+            <div class="stat-card scale-in" style="animation-delay: 0.3s;">
+                <div class="stat-card-icon">⏱️</div>
+                <div class="stat-card-value">{avg_duration_str}</div>
+                <div class="stat-card-label">평균 길이</div>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+    st.markdown(
+        """
+        </div>
+        <style>
+        .stats-container {
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: var(--card-background);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            padding: 1.5rem;
+            text-align: center;
+            transition: var(--transition-medium);
+            box-shadow: var(--shadow-sm);
+            height: 100%;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-light);
+        }
+
+        .stat-card-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.9;
+        }
+
+        .stat-card-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-card-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
 # 동영상 목록 렌더링
 def render_videos():
@@ -285,71 +420,38 @@ def load_trending_videos(
         logger.error(f"동영상 데이터 로딩 중 오류: {e}")
         raise
 
-# 설정 상태 표시
-def render_config_status():
-    """설정 로드 상태 표시"""
-    status = settings.get_config_status()
-    
-    with st.expander("🔧 설정 로드 상태", expanded=False):
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            st.metric("설정 소스", status['config_source'])
-            st.metric("로드 성공", "✅" if status['load_success'] else "❌")
-        
-        with col2:
-            st.metric("API 키 설정", "✅" if status['api_key_set'] else "❌")
-            st.metric("Secrets 사용 가능", "✅" if status['secrets_available'] else "❌")
-        
-        if status['load_errors']:
-            st.error(f"로드 오류: {', '.join(status['load_errors'])}")
-        
-        # 상세 설정 정보
-        if st.checkbox("상세 설정 정보 보기"):
-            config_info = settings.get_config_info()
-            for key, value in config_info.items():
-                st.text(f"{key}: {value}")
-        
-        # API 키 디버깅 정보
-        st.subheader("🔑 API 키 디버깅")
-        api_key_display = settings.get_api_key_display(show_full=False)
-        st.text(f"API 키 (부분 표시): {api_key_display}")
-        
-        # API 키가 플레이스홀더인지 확인
-        if "your_youtube_api_key_here" in settings.YOUTUBE_API_KEY:
-            st.error("❌ API 키가 설정되지 않았습니다!")
-            st.info("""
-            **YouTube API 키 설정 방법:**
-            
-            1. [Google Cloud Console](https://console.cloud.google.com/) 접속
-            2. 새 프로젝트 생성 또는 기존 프로젝트 선택
-            3. YouTube Data API v3 활성화
-            4. API 키 생성
-            5. `.streamlit/secrets.toml` 파일에서 `youtube_api_key` 값을 실제 키로 변경
-            """)
-        
-        if st.checkbox("전체 API 키 보기 (디버깅용)"):
-            full_api_key = settings.get_api_key_display(show_full=True)
-            st.text(f"전체 API 키: {full_api_key}")
-            st.warning("⚠️ 보안상 주의: 이 정보를 공유하지 마세요!")
+# API 키 확인 (개발 디버깅 제거)
+def check_api_key():
+    """API 키가 설정되었는지 확인"""
+    if not settings.YOUTUBE_API_KEY or "your_youtube_api_key_here" in settings.YOUTUBE_API_KEY:
+        st.error("❌ YouTube API 키가 설정되지 않았습니다!")
+        st.info("""
+        **YouTube API 키 설정 방법:**
+
+        1. [Google Cloud Console](https://console.cloud.google.com/) 접속
+        2. 새 프로젝트 생성 또는 기존 프로젝트 선택
+        3. YouTube Data API v3 활성화
+        4. API 키 생성
+        5. `.streamlit/secrets.toml` 파일에서 `youtube_api_key` 값을 실제 키로 변경
+        """)
+        return False
+    return True
 
 # 메인 애플리케이션
 def main():
     """메인 애플리케이션 함수"""
     # CSS 로드
     load_css()
-    
-    # 설정 상태 출력 (콘솔)
-    settings.print_config_status()
-    
+
     # 세션 상태 초기화
     init_session_state()
-    
+
     # 헤더 렌더링
     render_header()
-    
-    # 설정 상태 표시
-    render_config_status()
+
+    # API 키 확인
+    if not check_api_key():
+        st.stop()
     
     # 사이드바 렌더링
     if not render_sidebar():
@@ -363,9 +465,9 @@ def main():
                 response = load_trending_videos(
                     region_code=st.session_state.current_region,
                     category_id=st.session_state.current_category,
-                    max_results=st.session_state.current_results_per_page
+                    max_results=st.session_state.get('current_results_per_page', settings.DEFAULT_MAX_RESULTS)
                 )
-                
+
                 # 데이터 처리
                 videos = DataProcessor.process_trending_videos(response)
                 pagination_info = DataProcessor.get_pagination_info(response)
@@ -422,12 +524,86 @@ def main():
                 st.info(f"⏰ 다음 자동 새로고침까지 {int(time_remaining)}초 남음")
     
     # 푸터
-    st.markdown("---")
     st.markdown(
         f"""
-        <div style="text-align: center; color: var(--text-secondary); padding: 1rem;">
-            <p>📺 {settings.APP_TITLE} | 마지막 업데이트: {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(st.session_state.last_refresh)) if st.session_state.last_refresh else '없음'}</p>
+        <div class="footer-container fade-in">
+            <div class="footer-divider"></div>
+            <div class="footer-content">
+                <div class="footer-info">
+                    <span class="footer-icon">📺</span>
+                    <span class="footer-text">{settings.APP_TITLE}</span>
+                </div>
+                <div class="footer-separator">|</div>
+                <div class="footer-info">
+                    <span class="footer-icon">⏱️</span>
+                    <span class="footer-text">마지막 업데이트: {time.strftime('%H:%M:%S', time.localtime(st.session_state.last_refresh)) if st.session_state.last_refresh else '없음'}</span>
+                </div>
+                <div class="footer-separator">|</div>
+                <div class="footer-info">
+                    <span class="footer-icon">🌟</span>
+                    <span class="footer-text">실시간 트렌드</span>
+                </div>
+            </div>
+            <div class="footer-copyright">
+                <p>Made with ❤️ using YouTube Data API v3</p>
+            </div>
         </div>
+
+        <style>
+        .footer-container {{
+            margin-top: 3rem;
+            padding: 2rem 0 1rem 0;
+        }}
+
+        .footer-divider {{
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--border-color) 20%, var(--border-color) 80%, transparent);
+            margin-bottom: 2rem;
+        }}
+
+        .footer-content {{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }}
+
+        .footer-info {{
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }}
+
+        .footer-icon {{
+            font-size: 1rem;
+            opacity: 0.8;
+        }}
+
+        .footer-text {{
+            font-weight: 500;
+        }}
+
+        .footer-separator {{
+            color: var(--text-tertiary);
+            opacity: 0.5;
+        }}
+
+        .footer-copyright {{
+            text-align: center;
+            color: var(--text-tertiary);
+            font-size: 0.75rem;
+            opacity: 0.8;
+            margin-top: 1rem;
+        }}
+
+        .footer-copyright p {{
+            margin: 0;
+        }}
+        </style>
         """,
         unsafe_allow_html=True
     )

@@ -35,21 +35,45 @@ class VideoCard:
                                      class="thumbnail-image"
                                      onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDMyMCAxODAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMjAiIGhlaWdodD0iMTgwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xMzUgNzVMMTY1IDkwTDEzNSAxMDVWNzVaIiBmaWxsPSIjNkI3MjgwIi8+Cjx0ZXh0IHg9IjE2MCIgeT0iMTQwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTIiIGZpbGw9IiM2QjcyODAiPkltYWdlIG5vdCBhdmFpbGFibGU8L3RleHQ+Cjwvc3ZnPgo='"
                                      loading="lazy">
-                                <div class="video-duration">{video_data.get('duration', '0:00')}</div>
+                                <div class="video-duration">
+                                    <span class="duration-icon">⏱️</span> {video_data.get('duration', '0:00')}
+                                </div>
+                                <div class="video-overlay">
+                                    <span class="play-icon">▶️</span>
+                                </div>
                             </div>
                             <div class="video-info">
                                 <h3 class="video-title" title="{video_data.get('full_title', '')}">
                                     {video_data.get('title', '제목 없음')}
                                 </h3>
                                 <div class="video-channel">
+                                    <span class="channel-icon">👤</span>
                                     <span class="channel-name" title="{video_data.get('full_channel_title', '')}">
                                         {video_data.get('channel_title', '알 수 없는 채널')}
                                     </span>
                                 </div>
                                 <div class="video-stats">
-                                    <span class="view-count">{video_data.get('view_count', '0회')}</span>
-                                    <span class="published-time">{video_data.get('published_at', '시간 정보 없음')}</span>
+                                    <span class="stat-item">
+                                        <span class="stat-icon">👁️</span>
+                                        <span class="stat-value">{video_data.get('view_count', '0회')}</span>
+                                    </span>
+                                    <span class="stat-separator">•</span>
+                                    <span class="stat-item">
+                                        <span class="stat-icon">📅</span>
+                                        <span class="stat-value">{video_data.get('published_at', '시간 정보 없음')}</span>
+                                    </span>
                                 </div>
+                                <div class="video-engagement">
+                                    <span class="engagement-item">
+                                        <span class="engagement-icon">👍</span>
+                                        <span class="engagement-value">{video_data.get('like_count', '0')}</span>
+                                    </span>
+                                    <span class="engagement-item">
+                                        <span class="engagement-icon">💬</span>
+                                        <span class="engagement-value">{video_data.get('comment_count', '0')}</span>
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </a>
                     """,
@@ -121,10 +145,19 @@ class VideoCard:
                                     {video_data.get('title', '제목 없음')}
                                 </h4>
                                 <p class="video-list-channel" title="{video_data.get('full_channel_title', '')}">
-                                    {video_data.get('channel_title', '알 수 없는 채널')}
+                                    <span class="channel-icon">👤</span> {video_data.get('channel_title', '알 수 없는 채널')}
                                 </p>
                                 <p class="video-list-stats">
-                                    {video_data.get('view_count', '0회')} • {video_data.get('published_at', '시간 정보 없음')} • {video_data.get('duration', '0:00')}
+                                    <span class="stat-inline">👁️ {video_data.get('view_count', '0회')}</span>
+                                    <span class="stat-separator">•</span>
+                                    <span class="stat-inline">📅 {video_data.get('published_at', '시간 정보 없음')}</span>
+                                    <span class="stat-separator">•</span>
+                                    <span class="stat-inline">⏱️ {video_data.get('duration', '0:00')}</span>
+                                </p>
+                                <p class="video-list-engagement">
+                                    <span class="engagement-inline">👍 {video_data.get('like_count', '0')}</span>
+                                    <span class="stat-separator">•</span>
+                                    <span class="engagement-inline">💬 {video_data.get('comment_count', '0')}</span>
                                 </p>
                             </div>
                         </div>

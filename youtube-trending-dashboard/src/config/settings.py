@@ -64,18 +64,18 @@ class Settings:
                 self.config_source = "Streamlit Secrets"
                 self._load_from_streamlit_secrets()
                 self.load_success = True
-                print(f"✅ Streamlit Secrets 로드 성공")
+                pass  # 성공 시 조용히 처리
             else:
                 # Secrets가 없으면 기본값으로 폴백
                 self.config_source = "Default Values"
                 self._load_defaults()
                 self.load_success = True
-                print("⚠️ Streamlit Secrets 없음, 기본값 사용")
+                pass  # 기본값 사용 시 조용히 처리
             
         except Exception as e:
             self.load_success = False
             self.load_errors.append(str(e))
-            print(f"❌ 설정 로드 실패: {e}")
+            pass  # 오류 시 조용히 처리
             # 기본값으로 폴백
             self._load_defaults()
     
@@ -116,7 +116,7 @@ class Settings:
     
     def _load_defaults(self):
         """기본값으로 설정 로드 (폴백)"""
-        print("⚠️ 기본값으로 설정 로드 중...")
+        # 조용히 기본값 로드
         
         # YouTube API 설정
         self.YOUTUBE_API_KEY = ""
@@ -164,64 +164,6 @@ class Settings:
         """카테고리 ID로부터 카테고리명 반환"""
         return self.YOUTUBE_CATEGORIES.get(category_id, "알 수 없음")
     
-    def get_config_info(self) -> Dict[str, Any]:
-        """현재 설정 정보 반환 (디버깅용)"""
-        return {
-            "youtube_api_key": "***" if self.YOUTUBE_API_KEY else "Not Set",
-            "app_title": self.APP_TITLE,
-            "default_region": self.DEFAULT_REGION,
-            "default_category": self.DEFAULT_CATEGORY,
-            "max_results": self.DEFAULT_MAX_RESULTS,
-            "cache_enabled": self.ENABLE_CACHE,
-            "log_level": self.LOG_LEVEL,
-            "theme": self.DEFAULT_THEME,
-            "items_per_page": self.ITEMS_PER_PAGE
-        }
-    
-    def get_api_key_display(self, show_full: bool = False) -> str:
-        """API 키 표시 (디버깅용)"""
-        if not self.YOUTUBE_API_KEY:
-            return "Not Set"
-        
-        if show_full:
-            return self.YOUTUBE_API_KEY
-        else:
-            # 앞 8자리와 뒤 4자리만 표시
-            key = self.YOUTUBE_API_KEY
-            if len(key) > 12:
-                return f"{key[:8]}...{key[-4:]}"
-            else:
-                return "***" + key[-4:] if len(key) > 4 else "***"
-    
-    def get_config_status(self) -> Dict[str, Any]:
-        """설정 로드 상태 정보 반환"""
-        return {
-            "config_source": self.config_source,
-            "load_success": self.load_success,
-            "load_errors": self.load_errors,
-            "api_key_set": bool(self.YOUTUBE_API_KEY),
-            "secrets_available": hasattr(st, 'secrets') and bool(st.secrets) if 'st' in globals() else False
-        }
-    
-    def print_config_status(self):
-        """설정 상태를 콘솔에 출력"""
-        status = self.get_config_status()
-        print("\n" + "="*50)
-        print("🔧 설정 로드 상태")
-        print("="*50)
-        print(f"설정 소스: {status['config_source']}")
-        print(f"로드 성공: {'✅' if status['load_success'] else '❌'}")
-        print(f"API 키 설정: {'✅' if status['api_key_set'] else '❌'}")
-        print(f"Secrets 사용 가능: {'✅' if status['secrets_available'] else '❌'}")
-        
-        # API 키 디버깅 정보
-        api_key_display = self.get_api_key_display(show_full=False)
-        print(f"API 키 (부분 표시): {api_key_display}")
-        
-        if status['load_errors']:
-            print(f"오류: {', '.join(status['load_errors'])}")
-        
-        print("="*50)
 
 
 # 전역 설정 인스턴스

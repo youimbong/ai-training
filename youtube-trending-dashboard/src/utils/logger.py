@@ -12,7 +12,7 @@ from ..config.settings import settings
 def setup_logger(
     log_level: str = "INFO",
     log_file: Optional[str] = None,
-    enable_console: bool = True
+    enable_console: bool = False  # 프로덕션에서는 콘솔 출력 비활성화
 ) -> None:
     """
     로거 설정
