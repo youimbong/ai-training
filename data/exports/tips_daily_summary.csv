@@ -1,0 +1,5 @@
+day,n,mean_total_bill,median_total_bill,mean_tip,median_tip,mean_tip_pct,median_tip_pct,avg_party_size,smoker_rate,lunch_rate
+Thur,62,17.68,16.2,2.77,2.3,16.13,15.38,2.45,0.274,0.984
+Fri,19,17.15,15.38,2.73,3.0,16.99,15.56,2.11,0.789,0.368
+Sat,87,20.44,18.24,2.99,2.75,15.32,15.18,2.52,0.483,0.0
+Sun,76,21.41,19.63,3.26,3.15,16.69,16.11,2.84,0.25,0.0
