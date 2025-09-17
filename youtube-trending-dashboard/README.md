@@ -29,22 +29,13 @@ cd youtube-trending-dashboard
 
 ### 2. 환경 설정
 
-**방법 1: .env 파일 사용 (권장)**
+**Streamlit Secrets 사용 (권장)**
 ```bash
-# 환경 변수 파일 생성
-cp .env.example .env
+# 자동 설정 스크립트 실행
+./setup_local_dev.sh
 
-# .env 파일 편집하여 YouTube API 키 설정
-nano .env
-```
-
-**방법 2: TOML 설정 파일 사용**
-```bash
-# TOML 설정 파일 생성
-cp config.toml.example config.toml
-
-# config.toml 파일 편집하여 YouTube API 키 설정
-nano config.toml
+# secrets.toml 파일 편집하여 YouTube API 키 설정
+nano .streamlit/secrets.toml
 ```
 
 ### 3. 의존성 설치
@@ -178,9 +169,12 @@ open htmlcov/index.html
    - 브랜치: `main`
 
 3. **Secrets 설정**
-   Streamlit Cloud 대시보드에서 "Secrets" 탭으로 이동하여 다음 설정 추가:
+   Streamlit Cloud 대시보드에서 "Advanced settings"로 이동하여 다음 설정 추가:
    ```toml
+   # 필수 설정
    youtube_api_key = "your_youtube_api_key_here"
+   
+   # 선택적 설정
    app_title = "YouTube 인기 동영상 대시보드"
    default_region = "KR"
    default_category = 0

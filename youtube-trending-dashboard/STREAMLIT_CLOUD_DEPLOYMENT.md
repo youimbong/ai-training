@@ -49,7 +49,7 @@ git push -u origin main
 
 ### 3단계: Secrets 설정
 
-배포가 시작되면 "Secrets" 탭으로 이동하여 다음 설정을 추가:
+배포가 시작되면 "Advanced settings"로 이동하여 다음 설정을 추가:
 
 ```toml
 # 필수 설정
