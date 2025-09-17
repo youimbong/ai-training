@@ -286,9 +286,11 @@ def render_stats():
             unsafe_allow_html=True
         )
 
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # CSS 스타일 추가 (한 번만)
     st.markdown(
         """
-        </div>
         <style>
         .stats-container {
             margin: 2rem 0;
