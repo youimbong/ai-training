@@ -112,6 +112,11 @@ class Settings:
         # 보안 설정
         self.ENABLE_RATE_LIMITING = st.secrets.get("enable_rate_limiting", True)
         self.MAX_REQUESTS_PER_MINUTE = int(st.secrets.get("max_requests_per_minute", "100"))
+
+        # 인증 설정
+        self.ENABLE_PASSWORD_AUTH = st.secrets.get("enable_password_auth", True)
+        self.APP_PASSWORD = st.secrets.get("app_password", "")  # 비밀번호를 secrets.toml에 저장
+        self.AUTH_SESSION_TIMEOUT = int(st.secrets.get("auth_session_timeout", "3600"))  # 1시간 기본값
     
     
     def _load_defaults(self):
@@ -149,6 +154,11 @@ class Settings:
         # 보안 설정
         self.ENABLE_RATE_LIMITING = True
         self.MAX_REQUESTS_PER_MINUTE = 100
+
+        # 인증 설정
+        self.ENABLE_PASSWORD_AUTH = True
+        self.APP_PASSWORD = ""  # 기본값 - secrets.toml에서 설정 필요
+        self.AUTH_SESSION_TIMEOUT = 3600  # 1시간
     
     def validate_config(self) -> bool:
         """설정 유효성 검사"""

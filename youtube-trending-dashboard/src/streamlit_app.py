@@ -17,6 +17,7 @@ from src.components.video_card import VideoCard
 from src.components.pagination import Pagination
 from src.components.filters import Filters
 from src.utils.logger import get_logger, log_user_action
+from src.utils.auth import AuthManager
 
 # 로거 설정
 logger = get_logger(__name__)
@@ -40,30 +41,33 @@ def load_css():
 # 세션 상태 초기화
 def init_session_state():
     """세션 상태 초기화"""
+    # 인증 상태 초기화
+    AuthManager.initialize_auth_state()
+
     if 'videos' not in st.session_state:
         st.session_state.videos = []
-    
+
     if 'current_page' not in st.session_state:
         st.session_state.current_page = 1
-    
+
     if 'total_pages' not in st.session_state:
         st.session_state.total_pages = 1
-    
+
     if 'total_results' not in st.session_state:
         st.session_state.total_results = 0
-    
+
     if 'loading' not in st.session_state:
         st.session_state.loading = False
-    
+
     if 'error_message' not in st.session_state:
         st.session_state.error_message = None
-    
+
     if 'last_refresh' not in st.session_state:
         st.session_state.last_refresh = None
-    
+
     if 'view_mode' not in st.session_state:
         st.session_state.view_mode = 'grid'
-    
+
     if 'auto_refresh' not in st.session_state:
         st.session_state.auto_refresh = False
 
@@ -123,6 +127,11 @@ def render_sidebar():
             """,
             unsafe_allow_html=True
         )
+
+        # 로그아웃 버튼 (인증이 활성화된 경우만)
+        if settings.ENABLE_PASSWORD_AUTH and settings.APP_PASSWORD:
+            AuthManager.render_logout_button()
+            st.markdown("---")
 
         # API 키 확인
         if not settings.validate_config():
@@ -448,13 +457,18 @@ def main():
     # 세션 상태 초기화
     init_session_state()
 
+    # 인증 체크
+    if not AuthManager.is_authenticated():
+        AuthManager.render_login_page()
+        st.stop()
+
     # 헤더 렌더링
     render_header()
 
     # API 키 확인
     if not check_api_key():
         st.stop()
-    
+
     # 사이드바 렌더링
     if not render_sidebar():
         st.stop()
