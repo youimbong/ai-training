@@ -1,22 +1,15 @@
 """
 애플리케이션 설정 관리 모듈
-Streamlit Cloud와 로컬 환경을 모두 지원합니다.
+Streamlit Secrets 전용으로 동작합니다.
 """
-import os
 import streamlit as st
 from typing import Optional, Any, Dict
 
-# dotenv import 시도 (선택적)
-try:
-    from dotenv import load_dotenv
-    load_dotenv()
-    print("✅ dotenv 로드 성공")
-except ImportError:
-    print("⚠️ dotenv 없음, 환경 변수만 사용")
+# Streamlit 전용 설정 관리
 
 
 class Settings:
-    """애플리케이션 설정 클래스 - Streamlit Cloud와 로컬 환경 지원"""
+    """애플리케이션 설정 클래스 - Streamlit Secrets 전용"""
     
     # YouTube API 엔드포인트
     YOUTUBE_API_BASE_URL: str = "https://www.googleapis.com/youtube/v3"
@@ -64,19 +57,20 @@ class Settings:
         self._load_config()
     
     def _load_config(self):
-        """설정 로드 - Streamlit Cloud Secrets 우선"""
+        """설정 로드 - Streamlit Secrets 전용"""
         try:
-            # Streamlit Cloud Secrets에서 설정 로드
+            # Streamlit Secrets에서 설정 로드
             if hasattr(st, 'secrets') and st.secrets:
                 self.config_source = "Streamlit Secrets"
                 self._load_from_streamlit_secrets()
+                self.load_success = True
+                print(f"✅ Streamlit Secrets 로드 성공")
             else:
-                # 로컬 환경에서 환경 변수로 설정 로드
-                self.config_source = "Environment Variables"
-                self._load_from_env_vars()
-            
-            self.load_success = True
-            print(f"✅ 설정 로드 성공: {self.config_source}")
+                # Secrets가 없으면 기본값으로 폴백
+                self.config_source = "Default Values"
+                self._load_defaults()
+                self.load_success = True
+                print("⚠️ Streamlit Secrets 없음, 기본값 사용")
             
         except Exception as e:
             self.load_success = False
@@ -86,78 +80,39 @@ class Settings:
             self._load_defaults()
     
     def _load_from_streamlit_secrets(self):
-        """Streamlit Cloud Secrets에서 설정 로드"""
-        try:
-            # YouTube API 설정
-            self.YOUTUBE_API_KEY = st.secrets.get("youtube_api_key", "")
-            
-            # 애플리케이션 기본 설정
-            self.APP_TITLE = st.secrets.get("app_title", "YouTube 인기 동영상 대시보드")
-            self.APP_ICON = st.secrets.get("app_icon", "📺")
-            self.DEFAULT_REGION = st.secrets.get("default_region", "KR")
-            self.DEFAULT_CATEGORY = int(st.secrets.get("default_category", "0"))
-            self.DEFAULT_MAX_RESULTS = int(st.secrets.get("default_max_results", "30"))
-            
-            # 캐시 설정
-            self.CACHE_TTL = int(st.secrets.get("cache_ttl", "300"))
-            self.ENABLE_CACHE = st.secrets.get("enable_cache", True)
-            
-            # 로깅 설정
-            self.LOG_LEVEL = st.secrets.get("log_level", "INFO")
-            self.LOG_FILE = st.secrets.get("log_file", "logs/app.log")
-            
-            # UI 설정
-            self.DEFAULT_THEME = st.secrets.get("default_theme", "light")
-            self.ENABLE_DARK_MODE = st.secrets.get("enable_dark_mode", True)
-            self.ITEMS_PER_PAGE = int(st.secrets.get("items_per_page", "30"))
-            
-            # 성능 설정
-            self.MAX_RETRIES = int(st.secrets.get("max_retries", "3"))
-            self.REQUEST_TIMEOUT = int(st.secrets.get("request_timeout", "30"))
-            self.ENABLE_LAZY_LOADING = st.secrets.get("enable_lazy_loading", True)
-            
-            # 보안 설정
-            self.ENABLE_RATE_LIMITING = st.secrets.get("enable_rate_limiting", True)
-            self.MAX_REQUESTS_PER_MINUTE = int(st.secrets.get("max_requests_per_minute", "100"))
-            
-        except Exception as e:
-            print(f"Streamlit Secrets 로드 중 오류: {e}")
-            # 오류 발생 시 환경 변수로 대체
-            self._load_from_env_vars()
-    
-    def _load_from_env_vars(self):
-        """환경 변수에서 설정 로드"""
-        # YouTube API 설정
-        self.YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY", "")
+        """Streamlit Secrets에서 설정 로드"""
+        # YouTube API 설정 (필수)
+        self.YOUTUBE_API_KEY = st.secrets.get("youtube_api_key", "")
         
         # 애플리케이션 기본 설정
-        self.APP_TITLE = os.getenv("APP_TITLE", "YouTube 인기 동영상 대시보드")
-        self.APP_ICON = os.getenv("APP_ICON", "📺")
-        self.DEFAULT_REGION = os.getenv("DEFAULT_REGION", "KR")
-        self.DEFAULT_CATEGORY = int(os.getenv("DEFAULT_CATEGORY", "0"))
-        self.DEFAULT_MAX_RESULTS = int(os.getenv("DEFAULT_MAX_RESULTS", "30"))
+        self.APP_TITLE = st.secrets.get("app_title", "YouTube 인기 동영상 대시보드")
+        self.APP_ICON = st.secrets.get("app_icon", "📺")
+        self.DEFAULT_REGION = st.secrets.get("default_region", "KR")
+        self.DEFAULT_CATEGORY = int(st.secrets.get("default_category", "0"))
+        self.DEFAULT_MAX_RESULTS = int(st.secrets.get("default_max_results", "30"))
         
         # 캐시 설정
-        self.CACHE_TTL = int(os.getenv("CACHE_TTL", "300"))
-        self.ENABLE_CACHE = os.getenv("ENABLE_CACHE", "true").lower() == "true"
+        self.CACHE_TTL = int(st.secrets.get("cache_ttl", "300"))
+        self.ENABLE_CACHE = st.secrets.get("enable_cache", True)
         
         # 로깅 설정
-        self.LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
-        self.LOG_FILE = os.getenv("LOG_FILE", "logs/app.log")
+        self.LOG_LEVEL = st.secrets.get("log_level", "INFO")
+        self.LOG_FILE = st.secrets.get("log_file", "logs/app.log")
         
         # UI 설정
-        self.DEFAULT_THEME = os.getenv("DEFAULT_THEME", "light")
-        self.ENABLE_DARK_MODE = os.getenv("ENABLE_DARK_MODE", "true").lower() == "true"
-        self.ITEMS_PER_PAGE = int(os.getenv("ITEMS_PER_PAGE", "30"))
+        self.DEFAULT_THEME = st.secrets.get("default_theme", "light")
+        self.ENABLE_DARK_MODE = st.secrets.get("enable_dark_mode", True)
+        self.ITEMS_PER_PAGE = int(st.secrets.get("items_per_page", "30"))
         
         # 성능 설정
-        self.MAX_RETRIES = int(os.getenv("MAX_RETRIES", "3"))
-        self.REQUEST_TIMEOUT = int(os.getenv("REQUEST_TIMEOUT", "30"))
-        self.ENABLE_LAZY_LOADING = os.getenv("ENABLE_LAZY_LOADING", "true").lower() == "true"
+        self.MAX_RETRIES = int(st.secrets.get("max_retries", "3"))
+        self.REQUEST_TIMEOUT = int(st.secrets.get("request_timeout", "30"))
+        self.ENABLE_LAZY_LOADING = st.secrets.get("enable_lazy_loading", True)
         
         # 보안 설정
-        self.ENABLE_RATE_LIMITING = os.getenv("ENABLE_RATE_LIMITING", "true").lower() == "true"
-        self.MAX_REQUESTS_PER_MINUTE = int(os.getenv("MAX_REQUESTS_PER_MINUTE", "100"))
+        self.ENABLE_RATE_LIMITING = st.secrets.get("enable_rate_limiting", True)
+        self.MAX_REQUESTS_PER_MINUTE = int(st.secrets.get("max_requests_per_minute", "100"))
+    
     
     def _load_defaults(self):
         """기본값으로 설정 로드 (폴백)"""

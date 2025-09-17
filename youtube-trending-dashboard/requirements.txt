@@ -1,6 +1,5 @@
 # Core Dependencies
 streamlit>=1.32.0
-python-dotenv>=1.0.0
 google-api-python-client>=2.100.0  # provides googleapiclient module
 google-auth>=2.23.0
 google-auth-oauthlib>=1.1.0
