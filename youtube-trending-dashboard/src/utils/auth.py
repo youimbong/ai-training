@@ -218,21 +218,6 @@ class AuthManager:
                         else:
                             st.warning("비밀번호를 입력하세요")
 
-            # 도움말 링크
-            st.markdown(
-                """
-                <div style="text-align: center; margin-top: 1rem;">
-                    <small style="color: #999;">비밀번호를 잊으셨나요?</small>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-
-            with st.expander("도움말", expanded=False):
-                st.caption(
-                    "**재설정 방법**: `.streamlit/secrets.toml`에서 `app_password` 변경"
-                )
-
     @staticmethod
     def render_logout_button():
         """로그아웃 버튼 렌더링"""
